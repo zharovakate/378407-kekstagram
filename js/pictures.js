@@ -6,6 +6,7 @@
 
 document.querySelector('.gallery-overlay').classList.remove('invisible');
 document.querySelector('.upload-overlay').classList.add('invisible');
+document.querySelector('.upload-form').classList.remove('invisible');
 
 //
 var similarListElement = document.querySelector('.pictures');
@@ -40,22 +41,110 @@ var addNewPictureElement = function (element) {
 };
 
 var createNewPictureElement = function (data) {
-
   var pictureElement = pictureTemplate.cloneNode(true);
+
   pictureElement.querySelector('.picture-likes').textContent = data.like;
   pictureElement.querySelector('img').src = data.url;
   pictureElement.querySelector('.picture-comments').textContent = data.comment;
+
   return pictureElement;
 };
 
-var Arr = [];
+
+var picturesArray = [];
 for (var i = 0; i < 25; i++) {
-  Arr.push(generatePicture(i));
-  addNewPictureElement(createNewPictureElement(Arr[i]));
+  initPictureElement(generatePicture(i));
+}
+
+function initPictureElement(data) {
+  var pictureElement = createNewPictureElement(data);
+  var pictureLink = pictureElement.querySelector('.picture');
+  var showPicture = function (evt) {
+    evt.preventDefault();
+
+    galleryOverlay.querySelector('.gallery-overlay-image').src = data.url;
+    galleryOverlay.querySelector('.comments-count').textContent = data.comment;
+    galleryOverlay.querySelector('.likes-count').textContent = data.like;
+
+    showOverlay();
+  };
+
+  pictureLink.addEventListener('click', showPicture);
+
+  picturesArray.push(data);
+  addNewPictureElement(pictureElement);
 }
 
 var galleryOverlay = document.querySelector('.gallery-overlay');
 
-galleryOverlay.querySelector('.gallery-overlay-image').src = Arr[0].url;
-galleryOverlay.querySelector('.likes-count').textContent = Arr[0].like;
-galleryOverlay.querySelector('.comments-count').textContent = Arr[0].comment;
+galleryOverlay.querySelector('.gallery-overlay-image').src = picturesArray[0].url;
+galleryOverlay.querySelector('.likes-count').textContent = picturesArray[0].like;
+galleryOverlay.querySelector('.comments-count').textContent = picturesArray[0].comment;
+
+var galleryOverlayClose = document.querySelector('.gallery-overlay-close');
+
+galleryOverlayClose.addEventListener('keydown', function (evt) {
+  evt.preventDefault();
+
+  if (evt.keyCode === 13) {
+    hideOverlay();
+  }
+});
+
+function hideOverlay() {
+  galleryOverlay.classList.add('hidden');
+}
+function showOverlay() {
+  galleryOverlay.classList.remove('hidden');
+}
+
+// При нажатии на элемент .gallery-overlay-close элемент .gallery-overlay должен скрываться
+
+galleryOverlayClose.addEventListener('click', function () {
+  hideOverlay();
+});
+
+var uploadInput = document.querySelector('.upload-input');
+
+uploadInput.addEventListener('change', function (evt) {
+  var value = evt.target.value;
+
+  if (value) {
+    showCropOverlay();
+  }
+});
+
+var uploadCropOverlay = document.querySelector('.upload-overlay');
+
+function showCropOverlay() {
+  uploadCropOverlay.classList.remove('invisible');
+}
+
+var formCancel = document.querySelector('.upload-form-cancel');
+
+function uploadFormCancel() {
+  uploadCropOverlay.classList.add('invisible');
+}
+
+formCancel.addEventListener('click', function () {
+  uploadFormCancel();
+});
+
+var comment = document.querySelector('.upload-form-description');
+
+document.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === 27) {
+    hideOverlay();
+
+    if (evt.target !== comment) {
+      uploadFormCancel();
+    }
+  }
+});
+
+var submitButton = document.querySelector('.upload-form-submit');
+
+submitButton.addEventListener('click', function (evt) {
+  evt.preventDefault();
+  uploadFormCancel();
+});

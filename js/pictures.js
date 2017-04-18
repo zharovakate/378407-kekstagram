@@ -1,8 +1,4 @@
-// /**
-//  * Created by Ekaterina.Zharova on 05.04.17.
-//  */
 'use strict';
-// /
 
 document.querySelector('.gallery-overlay').classList.remove('invisible');
 document.querySelector('.upload-overlay').classList.add('invisible');
@@ -122,6 +118,15 @@ function showCropOverlay() {
 
 var formCancel = document.querySelector('.upload-form-cancel');
 
+function checkValidation() {
+  if (comment.validity.valid) {
+    comment.classList.remove('upload-message-error');
+  } else {
+    comment.classList.add('upload-message-error');
+  }
+  return comment.validity.valid;
+}
+
 function uploadFormCancel() {
   uploadCropOverlay.classList.add('invisible');
 }
@@ -146,5 +151,68 @@ var submitButton = document.querySelector('.upload-form-submit');
 
 submitButton.addEventListener('click', function (evt) {
   evt.preventDefault();
-  uploadFormCancel();
+  if (checkValidation()) {
+    uploadFormCancel();
+    setFormToDefaultValues();
+  }
 });
+
+var valueResizeControl = document.querySelector('.upload-resize-controls-value');
+var buttonInc = document.querySelector('.upload-resize-controls-button-inc');
+var buttonDec = document.querySelector('.upload-resize-controls-button-dec');
+var imagePreview = document.querySelector('.filter-image-preview');
+
+var value = 100;
+var step = 25;
+var min = 25;
+var max = 100;
+
+buttonDec.addEventListener('click', function () {
+  if (value !== min) {
+    value = value - step;
+    changeValue();
+  }
+});
+buttonInc.addEventListener('click', function () {
+  if (value !== max) {
+    value = value + step;
+    changeValue();
+  }
+});
+
+var changeValue = function () {
+  valueResizeControl.value = value + '%';
+  imagePreview.style = 'transform: scale(' + value / 100 + ')';
+};
+
+var currentFilterSelector;
+
+var uploadFilterPreviews = document.querySelector('.upload-filter-controls');
+uploadFilterPreviews.addEventListener('click', function (evt) {
+  if (evt.target.nodeName.toLowerCase() === 'input') {
+    setImageFilter(evt.target);
+  }
+});
+
+function setImageFilter(node) {
+  var filterId = node.id;
+  var filterSelector = filterId.replace('upload-', '');
+
+  imagePreview.classList.remove(currentFilterSelector);
+  if (filterSelector !== '') {
+    imagePreview.classList.add(filterSelector);
+  }
+  currentFilterSelector = filterSelector;
+}
+
+function setFormToDefaultValues() {
+  setImageFilter(document.querySelector('input[name="upload-filter"]'));
+
+  valueResizeControl.value = value + '%';
+  imagePreview.style = 'transform: scale(' + value / 100 + ')';
+
+  value = 100;
+  changeValue();
+
+  comment.value = '';
+}

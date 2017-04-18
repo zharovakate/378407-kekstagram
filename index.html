@@ -35,7 +35,7 @@
                 <button type="button"
                         class="upload-resize-control upload-resize-controls-button upload-resize-controls-button-dec">–
                 </button><!--
-        --><input type="text" class="upload-resize-control upload-resize-controls-value" value="55%" readonly/><!--
+        --><input type="text" class="upload-resize-control upload-resize-controls-value" value="100%" readonly/><!--
         -->
                 <button type="button"
                         class="upload-resize-control upload-resize-controls-button upload-resize-controls-button-inc">+
@@ -44,7 +44,7 @@
 
             <div class="upload-form-preview">
                 <div></div>
-                <img src="img/upload-default-image.png" class="filter-image-preview">
+                <img src="img/upload-default-image.png" class="filter-image-preview" style = "transform: scale(1)">
             </div>
 
             <fieldset class="upload-filter-controls">
@@ -93,7 +93,7 @@
             </fieldset>
 
             <textarea class="upload-form-description" name="upload-description"
-                      placeholder="Ваш комментарий..."></textarea>
+                      placeholder="Ваш комментарий..." required minlength="30" maxlength="100"></textarea>
 
             <button class="upload-form-cancel" type="reset" id="upload-cancel"></button>
             <button class="upload-form-submit" type="submit" id="upload-submit">Отправить</button>

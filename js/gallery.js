@@ -4,21 +4,17 @@ window.gallery = (function () {
   var galleryOverlay = document.querySelector('.gallery-overlay');
   var galleryOverlayClose = document.querySelector('.gallery-overlay-close');
 
-  document.querySelector('.upload-overlay').classList.add('invisible');
-  document.querySelector('.upload-form').classList.remove('invisible');
-  document.querySelector('.gallery-overlay').classList.remove('invisible');
+  var generatePicturesArray = function () {
+    var arr = [];
 
-  var picturesArray = [];
-  for (var i = 0, pictureData; i < 25; i++) {
-    pictureData = window.data.generatePicture(i);
+    for (var i = 0, pictureData; i < 25; i++) {
+      pictureData = window.data.generatePicture(i);
+      window.picture.initPictureElement(pictureData);
+      arr.push(pictureData);
+    }
 
-    window.picture.initPictureElement(pictureData);
-    picturesArray.push(pictureData);
-  }
-
-  galleryOverlay.querySelector('.gallery-overlay-image').src = picturesArray[0].url;
-  galleryOverlay.querySelector('.likes-count').textContent = picturesArray[0].like;
-  galleryOverlay.querySelector('.comments-count').textContent = picturesArray[0].comment;
+    return arr;
+  };
 
   var hideOverlay = function () {
     galleryOverlay.classList.add('hidden');
@@ -33,7 +29,6 @@ window.gallery = (function () {
     galleryOverlay.querySelector('.comments-count').textContent = data.comment;
     galleryOverlay.querySelector('.likes-count').textContent = data.like;
   };
-
 
   galleryOverlayClose.addEventListener('keydown', function (evt) {
     evt.preventDefault();
@@ -53,6 +48,16 @@ window.gallery = (function () {
       window.form.uploadFormCancel(evt);
     }
   });
+
+  var picturesArray = generatePicturesArray();
+
+  galleryOverlay.querySelector('.gallery-overlay-image').src = picturesArray[0].url;
+  galleryOverlay.querySelector('.likes-count').textContent = picturesArray[0].like;
+  galleryOverlay.querySelector('.comments-count').textContent = picturesArray[0].comment;
+
+  document.querySelector('.upload-overlay').classList.add('invisible');
+  document.querySelector('.upload-form').classList.remove('invisible');
+  document.querySelector('.gallery-overlay').classList.remove('invisible');
 
   return {
     showOverlay: showOverlay,

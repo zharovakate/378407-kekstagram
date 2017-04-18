@@ -1,7 +1,3 @@
-/**
- * Created by Ekaterina.Zharova on 16.04.17.
- */
-
 'use strict';
 
 window.data = (function () {

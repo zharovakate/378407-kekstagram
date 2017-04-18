@@ -1,8 +1,4 @@
-// /**
-//  * Created by Ekaterina.Zharova on 05.04.17.
-//  */
 'use strict';
-// /
 
 document.querySelector('.gallery-overlay').classList.remove('invisible');
 document.querySelector('.upload-overlay').classList.add('invisible');
@@ -166,9 +162,6 @@ var buttonInc = document.querySelector('.upload-resize-controls-button-inc');
 var buttonDec = document.querySelector('.upload-resize-controls-button-dec');
 var imagePreview = document.querySelector('.filter-image-preview');
 
-var uploadFilterPreviews = document.querySelectorAll('input[name="upload-filter"]');
-
-
 var value = 100;
 var step = 25;
 var min = 25;
@@ -194,24 +187,26 @@ var changeValue = function () {
 
 var currentFilterSelector;
 
-for (var n = 0; n < uploadFilterPreviews.length; n++) {
-  uploadFilterPreviews[n].addEventListener('click', function (evt) {
+var uploadFilterPreviews = document.querySelector('.upload-filter-controls');
+uploadFilterPreviews.addEventListener('click', function (evt) {
+  if (evt.target.nodeName.toLowerCase() === 'input') {
     setImageFilter(evt.target);
-  });
-}
+  }
+});
 
 function setImageFilter(node) {
   var filterId = node.id;
   var filterSelector = filterId.replace('upload-', '');
 
   imagePreview.classList.remove(currentFilterSelector);
-  imagePreview.classList.add(filterSelector);
-
+  if (filterSelector !== '') {
+    imagePreview.classList.add(filterSelector);
+  }
   currentFilterSelector = filterSelector;
 }
 
 function setFormToDefaultValues() {
-  setImageFilter(uploadFilterPreviews[0]);
+  setImageFilter(document.querySelector('input[name="upload-filter"]'));
 
   valueResizeControl.value = value + '%';
   imagePreview.style = 'transform: scale(' + value / 100 + ')';

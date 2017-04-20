@@ -107,6 +107,7 @@ body {
 .upload-filter {
   position: relative;
   margin: 0 auto;
+  user-select: none;
 }
 
 .upload-filter-preview {

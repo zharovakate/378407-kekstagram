@@ -50,17 +50,24 @@ window.form = (function () {
     imagePreview.style.transform = 'scale(' + zoomValue / 100 + ')';
   };
 
-  var setImageFilter = function (node) {
-    var filterId = node.id;
+  var setImageFilter = function (filterNode) {
+    var filterId = filterNode.id;
     var filterSelector = filterId.replace('upload-', '');
 
     imagePreview.classList.remove(currentFilterSelector);
+
     if (filterSelector !== '') {
       imagePreview.classList.add(filterSelector);
+      imagePreview.style.filter = '';
     }
     currentFilterSelector = filterSelector;
+    if (currentFilterSelector === 'filter-none') {
+      filterSliderBlock.classList.add('invisible');
+    } else {
+      filterSliderBlock.classList.remove('invisible');
+      applyDefaultFilterLevel();
+    }
   };
-
   var setFormToDefaultValues = function () {
     setImageFilter(filterControls);
 
@@ -110,6 +117,74 @@ window.form = (function () {
       setImageFilter(evt.target);
     }
   });
+
+  // new task
+  var filterSliderBlock = document.querySelector('.upload-filter-level');
+  var filterPin = filterSliderBlock.querySelector('.upload-filter-level-pin');
+  var filterLevelLine = filterSliderBlock.querySelector('.upload-filter-level-line');
+  var filterLevelValue = filterSliderBlock.querySelector('.upload-filter-level-val');
+
+  filterPin.addEventListener('mousedown', function () {
+    var lineCoords = getCoords(filterLevelLine);
+
+    var moveFunction = function (evt) {
+      var pinLeft = evt.pageX - lineCoords.left;
+      var rightEdge = filterLevelLine.offsetWidth - (filterPin.offsetWidth / 2);
+      var percentValue = (pinLeft / rightEdge) * 100;
+      if (percentValue < 0) {
+        percentValue = 0;
+      }
+
+      if (percentValue > 100) {
+        percentValue = 100;
+      }
+
+      filterPin.style.left = percentValue + '%';
+      filterLevelValue.style.width = percentValue + '%';
+
+      var applyCurrentFilterSelector = function (percentFilterValue) {
+        if (currentFilterSelector === 'filter-chrome') {
+          imagePreview.style.filter = 'grayscale(' + percentFilterValue / 100 + ')';
+        } else if (currentFilterSelector === 'filter-sepia') {
+          imagePreview.style.filter = 'sepia(' + percentFilterValue / 100 + ')';
+        } else if (currentFilterSelector === 'filter-marvin') {
+          imagePreview.style.filter = 'invert(' + percentFilterValue + '%)';
+        } else if (currentFilterSelector === 'filter-phobos') {
+          imagePreview.style.filter = 'blur(' + (percentFilterValue / 100) * 3 + 'px)';
+        } else if (currentFilterSelector === 'filter-heat') {
+          imagePreview.style.filter = 'brightness(' + (percentFilterValue / 100) * 3 + ')';
+        }
+      };
+
+      applyCurrentFilterSelector(percentValue);
+
+    };
+
+    var upFunction = function () {
+      document.removeEventListener('mousemove', moveFunction);
+      document.removeEventListener('mouseup', upFunction);
+    };
+
+    document.addEventListener('mousemove', moveFunction);
+    document.addEventListener('mouseup', upFunction);
+
+    return false;
+  });
+
+  function getCoords(elem) {
+    var coords = elem.getBoundingClientRect();
+
+    return {
+      top: coords.top + pageYOffset,
+      left: coords.left + pageXOffset
+    };
+  }
+
+  var applyDefaultFilterLevel = function () {
+    filterLevelValue.style.width = '0%';
+    filterPin.style.left = '0%';
+    imagePreview.style.filter = '';
+  };
 
   return {
     uploadFormCancel: uploadFormCancel

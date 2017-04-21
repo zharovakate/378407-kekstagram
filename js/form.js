@@ -181,8 +181,8 @@ window.form = (function () {
   }
 
   var applyDefaultFilterLevel = function () {
-    filterLevelValue.style.width = '0%';
-    filterPin.style.left = '0%';
+    filterLevelValue.style.width = '100%';
+    filterPin.style.left = '100%';
     imagePreview.style.filter = '';
   };
 

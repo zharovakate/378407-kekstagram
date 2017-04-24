@@ -48,7 +48,7 @@
             </div>
 
             <fieldset class="upload-filter-controls">
-                <div class="upload-filter-level">
+                <div class="upload-filter-level invisible">
                     <div class="upload-filter-level-line" dropzone="move">
                         <div class="upload-filter-level-pin" draggable = "true"></div>
                         <div class="upload-filter-level-val"></div>
@@ -142,6 +142,8 @@
     </div>
 </div>
 
+<div class="error invisible"></div>
+
 <template id="picture-template" style="display: none">
     <a href="" class="picture" tabindex="0">
         <img src="" width="182" height="182">
@@ -154,9 +156,10 @@
 
 <script src='js/data.js'></script>
 <script src='js/picture.js'></script>
+<script src="js/load.js"></script>
 <script src='js/gallery.js'></script>
-+<script src="js/initialize-scale.js"></script>
-+<script src="js/initialize-filter.js"></script>
+<script src="js/initialize-scale.js"></script>
+<script src="js/initialize-filter.js"></script>
 <script src='js/form.js'></script>
 
 </body>

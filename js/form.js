@@ -7,22 +7,13 @@ window.form = (function () {
   var comment = document.querySelector('.upload-form-description');
   var formCancel = document.querySelector('.upload-form-cancel');
 
-  var valueResizeControl = document.querySelector('.upload-resize-controls-value');
-  var buttonInc = document.querySelector('.upload-resize-controls-button-inc');
-  var buttonDec = document.querySelector('.upload-resize-controls-button-dec');
+  // var valueResizeControl = document.querySelector('.upload-resize-controls-value');
 
   var submitButton = document.querySelector('.upload-form-submit');
   var filterControls = document.querySelector('.upload-filter-controls');
+
   var imagePreview = document.querySelector('.filter-image-preview');
-
   var currentFilterSelector;
-
-  var zoomValue = 100;
-  var Zoom = {
-    STEP: 25,
-    MIN: 25,
-    MAX: 100
-  };
 
   var showCropOverlay = function () {
     uploadCropOverlay.classList.remove('invisible');
@@ -45,30 +36,27 @@ window.form = (function () {
     uploadCropOverlay.classList.add('invisible');
   };
 
-  var changeValue = function () {
-    valueResizeControl.value = zoomValue + '%';
-    imagePreview.style.transform = 'scale(' + zoomValue / 100 + ')';
-  };
-
-  var setImageFilter = function (node) {
-    var filterId = node.id;
+  var setImageFilter = function (filterNode) {
+    var filterId = filterNode.id;
     var filterSelector = filterId.replace('upload-', '');
 
     imagePreview.classList.remove(currentFilterSelector);
+
     if (filterSelector !== '') {
       imagePreview.classList.add(filterSelector);
+      imagePreview.style.filter = '';
     }
     currentFilterSelector = filterSelector;
+    if (currentFilterSelector === 'filter-none') {
+      filterSliderBlock.classList.add('invisible');
+    } else {
+      filterSliderBlock.classList.remove('invisible');
+      applyDefaultFilterLevel();
+    }
   };
 
   var setFormToDefaultValues = function () {
     setImageFilter(filterControls);
-
-    valueResizeControl.value = zoomValue + '%';
-    imagePreview.style.transform = 'scale(' + zoomValue / 100 + ')';
-
-    zoomValue = 100;
-    changeValue();
 
     comment.value = '';
   };
@@ -91,25 +79,43 @@ window.form = (function () {
       setFormToDefaultValues();
     }
   });
-
-  buttonDec.addEventListener('click', function () {
-    if (zoomValue !== Zoom.MIN) {
-      zoomValue = zoomValue - Zoom.STEP;
-      changeValue();
-    }
-  });
-  buttonInc.addEventListener('click', function () {
-    if (zoomValue !== Zoom.MAX) {
-      zoomValue = zoomValue + Zoom.STEP;
-      changeValue();
-    }
-  });
-
   filterControls.addEventListener('click', function (evt) {
     if (evt.target.nodeName.toLowerCase() === 'input') {
       setImageFilter(evt.target);
     }
   });
+
+  var filterSliderBlock = document.querySelector('.upload-filter-level');
+  var filterPin = filterSliderBlock.querySelector('.upload-filter-level-pin');
+  var filterLevelValue = filterSliderBlock.querySelector('.upload-filter-level-val');
+
+  var applyDefaultFilterLevel = function () {
+    filterLevelValue.style.width = '100%';
+    filterPin.style.left = '100%';
+    imagePreview.style.filter = '';
+  };
+
+  var applyCurrentFilterSelector = function (percentFilterValue) {
+    if (currentFilterSelector === 'filter-chrome') {
+      imagePreview.style.filter = 'grayscale(' + percentFilterValue / 100 + ')';
+    } else if (currentFilterSelector === 'filter-sepia') {
+      imagePreview.style.filter = 'sepia(' + percentFilterValue / 100 + ')';
+    } else if (currentFilterSelector === 'filter-marvin') {
+      imagePreview.style.filter = 'invert(' + percentFilterValue + '%)';
+    } else if (currentFilterSelector === 'filter-phobos') {
+      imagePreview.style.filter = 'blur(' + (percentFilterValue / 100) * 3 + 'px)';
+    } else if (currentFilterSelector === 'filter-heat') {
+      imagePreview.style.filter = 'brightness(' + (percentFilterValue / 100) * 3 + ')';
+    }
+  };
+
+  window.initializeFilters(applyCurrentFilterSelector, filterSliderBlock);
+
+  var changeValue = function (scale) {
+    imagePreview.style.transform = 'scale(' + scale / 100 + ')';
+  };
+
+  window.initializeScale(changeValue);
 
   return {
     uploadFormCancel: uploadFormCancel

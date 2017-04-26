@@ -18,6 +18,7 @@ window.data = (function () {
         like: getRandomInt(15, 200),
         comment: getRandElement(COMMENTS)
       };
-    }
+    },
+    getRandomInt: getRandomInt
   };
 })();

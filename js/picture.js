@@ -36,9 +36,15 @@ window.picture = (function () {
 
     window.picture.addNewPictureElement(pictureElement);
   };
+  var clearPictures = function () {
+    while (similarListElement.hasChildNodes()) {
+      similarListElement.removeChild(similarListElement.lastChild);
+    }
+  };
 
   return {
     addNewPictureElement: addNewPictureElement,
-    initPictureElement: initPictureElement
+    initPictureElement: initPictureElement,
+    clearPictures: clearPictures
   };
 })();

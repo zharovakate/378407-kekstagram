@@ -10,13 +10,13 @@
 <body>
 
 <form class="filters hidden" action="index.html" method="get" autocomplete="off">
-    <input type="radio" id="filter-popular" class="filters-radio" name="filter" value="popular" onchange="debounce(sortByPopularity, 500)()" checked>
+    <input type="radio" id="filter-popular" class="filters-radio" name="filter" value="popular" checked>
     <label for="filter-popular" class="filters-item">Популярные</label>
 
-    <input type="radio" id="filter-new" class="filters-radio" name="filter" value="new" onchange="debounce(sortByNew, 500)()">
+    <input type="radio" id="filter-new" class="filters-radio" name="filter" value="new">
     <label for="filter-new" class="filters-item">Новые</label>
 
-    <input type="radio" id="filter-discussed" class="filters-radio" name="filter" value="discussed" onchange="debounce(sortByDiscussed, 500)()">
+    <input type="radio" id="filter-discussed" class="filters-radio" name="filter" value="discussed">
     <label for="filter-discussed" class="filters-item">Обсуждаемые</label>
 </form>
 

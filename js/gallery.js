@@ -25,31 +25,41 @@ window.gallery = (function () {
   }, function (error) {
     document.querySelector('.error').textContent = error;
   });
-
-  window.debounce = function (func, wait) {
+  function debounce(func, wait) {
     var timeout;
+    var lastArgs = null;
+
     return function () {
+      var context = null;
       var args = arguments;
+
       var later = function () {
         timeout = null;
-        func.apply(null, args);
+        if (lastArgs !== null) {
+          func.apply(context, lastArgs);
+        }
       };
+
       var callNow = !timeout;
+
       clearTimeout(timeout);
       timeout = setTimeout(later, wait);
+
       if (callNow) {
-        func.apply(null, args);
+        func.apply(context, args);
+      } else {
+        lastArgs = args;
       }
     };
-  };
+  }
 
-  window.sortByPopularity = function () {
+  var sortByPopularity = function () {
     window.picture.clearPictures();
     for (var i = 0; i < arr.length; i++) {
       window.picture.initPictureElement(arr[i]);
     }
   };
-  window.sortByNew = function () {
+  var sortByNew = function () {
     var list = [];
     while (list.length < 10) {
       var i;
@@ -64,7 +74,7 @@ window.gallery = (function () {
     }
   };
 
-  window.sortByDiscussed = function () {
+  var sortByDiscussed = function () {
     var sorted = arr.slice(0);
     sorted.sort(function (a, b) {
       return b.comment - a.comment;
@@ -74,6 +84,10 @@ window.gallery = (function () {
       window.picture.initPictureElement(sorted[i]);
     }
   };
+
+  document.getElementById('filter-popular').addEventListener('change', debounce(sortByPopularity, 500));
+  document.getElementById('filter-new').addEventListener('change', debounce(sortByNew, 500));
+  document.getElementById('filter-discussed').addEventListener('change', debounce(sortByDiscussed, 500));
 
   var hideOverlay = function () {
     galleryOverlay.classList.add('hidden');

@@ -15,7 +15,7 @@ window.gallery = (function () {
         comment: data[i].comments.length,
       };
       pictureData = serverData;
-      window.picture.initPictureElement(pictureData);
+      window.picture.initializePictureElement(pictureData);
       arr.push(pictureData);
     }
     galleryOverlay.querySelector('.gallery-overlay-image').src = arr[0].url;
@@ -30,7 +30,7 @@ window.gallery = (function () {
   var sortByPopularity = function () {
     window.picture.clearPictures();
     for (var i = 0; i < arr.length; i++) {
-      window.picture.initPictureElement(arr[i]);
+      window.picture.initializePictureElement(arr[i]);
     }
   };
   var sortByNew = function () {
@@ -44,7 +44,7 @@ window.gallery = (function () {
     }
     window.picture.clearPictures();
     for (var k = 0; k < 10; k++) {
-      window.picture.initPictureElement(arr[list[k]]);
+      window.picture.initializePictureElement(arr[list[k]]);
     }
   };
 
@@ -55,7 +55,7 @@ window.gallery = (function () {
     });
     window.picture.clearPictures();
     for (var i = 0; i < sorted.length; i++) {
-      window.picture.initPictureElement(sorted[i]);
+      window.picture.initializePictureElement(sorted[i]);
     }
   };
 

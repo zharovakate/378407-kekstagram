@@ -1,7 +1,8 @@
 'use strict';
-var URL = 'https://intensive-javascript-server-kjgvxfepjl.now.sh/kekstagram/data';
 
 window.gallery = (function () {
+  var URL = 'https://intensive-javascript-server-kjgvxfepjl.now.sh/kekstagram/data';
+  var debounce = window.utils.getDebounce();
   var galleryOverlay = document.querySelector('.gallery-overlay');
   var galleryOverlayClose = document.querySelector('.gallery-overlay-close');
 
@@ -25,33 +26,6 @@ window.gallery = (function () {
   }, function (error) {
     document.querySelector('.error').textContent = error;
   });
-  function debounce(func, wait) {
-    var timeout;
-    var lastArgs = null;
-
-    return function () {
-      var context = null;
-      var args = arguments;
-
-      var later = function () {
-        timeout = null;
-        if (lastArgs !== null) {
-          func.apply(context, lastArgs);
-        }
-      };
-
-      var callNow = !timeout;
-
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-
-      if (callNow) {
-        func.apply(context, args);
-      } else {
-        lastArgs = args;
-      }
-    };
-  }
 
   var sortByPopularity = function () {
     window.picture.clearPictures();
@@ -63,7 +37,7 @@ window.gallery = (function () {
     var list = [];
     while (list.length < 10) {
       var i;
-      i = window.data.getRandomInt(0, arr.length - 1);
+      i = window.utils.getRandomInt(0, arr.length - 1);
       if (list.indexOf(i) === -1) {
         list.push(i);
       }
@@ -84,10 +58,6 @@ window.gallery = (function () {
       window.picture.initPictureElement(sorted[i]);
     }
   };
-
-  document.getElementById('filter-popular').addEventListener('change', debounce(sortByPopularity, 500));
-  document.getElementById('filter-new').addEventListener('change', debounce(sortByNew, 500));
-  document.getElementById('filter-discussed').addEventListener('change', debounce(sortByDiscussed, 500));
 
   var hideOverlay = function () {
     galleryOverlay.classList.add('hidden');
@@ -125,6 +95,10 @@ window.gallery = (function () {
   document.querySelector('.upload-overlay').classList.add('invisible');
   document.querySelector('.upload-form').classList.remove('invisible');
   document.querySelector('.gallery-overlay').classList.remove('invisible');
+
+  document.getElementById('filter-popular').addEventListener('change', debounce(sortByPopularity, 500));
+  document.getElementById('filter-new').addEventListener('change', debounce(sortByNew, 500));
+  document.getElementById('filter-discussed').addEventListener('change', debounce(sortByDiscussed, 500));
 
   return {
     showOverlay: showOverlay,

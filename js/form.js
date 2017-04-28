@@ -7,12 +7,11 @@ window.form = (function () {
   var comment = document.querySelector('.upload-form-description');
   var formCancel = document.querySelector('.upload-form-cancel');
 
-  // var valueResizeControl = document.querySelector('.upload-resize-controls-value');
-
   var submitButton = document.querySelector('.upload-form-submit');
   var filterControls = document.querySelector('.upload-filter-controls');
 
   var imagePreview = document.querySelector('.filter-image-preview');
+  var resizeControlValue = document.querySelector('.upload-resize-controls-value');
   var currentFilterSelector;
 
   var showCropOverlay = function () {
@@ -109,13 +108,14 @@ window.form = (function () {
     }
   };
 
-  window.initializeFilters(applyCurrentFilterSelector, filterSliderBlock);
+  window.filters.initializeFilters(applyCurrentFilterSelector, filterSliderBlock);
 
   var changeValue = function (scale) {
     imagePreview.style.transform = 'scale(' + scale / 100 + ')';
+    resizeControlValue.value = scale + '%';
   };
 
-  window.initializeScale(changeValue);
+  window.scale.initializeScale(changeValue);
 
   return {
     uploadFormCancel: uploadFormCancel

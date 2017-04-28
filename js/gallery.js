@@ -25,6 +25,8 @@ window.gallery = (function () {
 
   }, function (error) {
     document.querySelector('.error').textContent = error;
+    var errorElement = document.querySelector('.error');
+    errorElement.classList.remove('invisible');
   });
 
   var sortByPopularity = function () {
